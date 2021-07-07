@@ -1,0 +1,11 @@
+
+* text eol=lf
+
+*.java text
+*.xml text
+*.properties text
+*.md text
+LICENSE text
+NOTICE diff
+
+*.jar binary
