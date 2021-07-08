@@ -7,9 +7,8 @@
 <title>Sucesso ao cadastrar</title>
 </head>
 <body>
-Sucesso ao cadastrar!<br>
-Você será direcionado para nossa página<br>
 Livre para navegar<br>
 ${MENSAGEM}
+<br><br><a href="https://www.facebook.com/hotelmilaoportoalegre">Clique aqui para comçar a navegar</a>
 </body>
 </html>

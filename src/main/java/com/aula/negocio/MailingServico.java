@@ -12,6 +12,21 @@ public class MailingServico {
 	
 	MailingRepositorio repositorio = new MailingRepositorio();
 
+	public boolean adminLog (String user, String password)
+	{
+		String userValido = "admin";
+		String passValido = "admin";
+		if (user.equals(userValido)) 
+		{
+			System.out.println(user);
+			if (password.equals(passValido))
+			{
+				System.out.println(password);
+				return true;
+			}
+		}return false;
+	}
+	
 	public String salvar(MailingModelo mailing) {
 		System.out.println("--EXECUTANDO SERVIÇO - SALVAR--");
 		if (mailing.nome.equals("")) {
@@ -47,6 +62,32 @@ public class MailingServico {
 		return null;
 	}
 	
+	public boolean buscarLogin(String email) 
+	{
+		boolean resultado = false;
+		System.out.println("--EXECUTANDO SERVIÇO - BUSCAR LOGIN--");
+		System.out.println("Buscando item de email: " + email);
+		for (MailingModelo mailing : repositorio.listagem()) 
+		{
+			System.out.println("String recebida " + email);
+			System.out.println("String do repositorio " + mailing.email);
+			if (mailing.email.equals(email)) 
+			{
+				System.out.println("Cadastro encontrado");
+				resultado = true;
+				System.out.println(resultado);
+				return resultado;
+			}{
+				System.out.println("Cadastro não encontrado");
+				resultado = false;
+				System.out.println(resultado);
+				return resultado;
+			 }
+		
+		}
+		return resultado;
+	}
+	
 	public String deletar(Integer id) {
 		MailingModelo mailing = buscar(id);
 		if (mailing == null) {
@@ -58,11 +99,20 @@ public class MailingServico {
 		}
 	}
 
-	public void atualizar(MailingModelo mailing) {
-		System.out.println("--EXECUTANDO SERVIÇO - ATUALIZAR--");
-		System.out.println("Atualizando o id: " + mailing.id);
-		repositorio.listagem().removeIf(obj -> obj.id == mailing.id);
-		repositorio.listagem().add(mailing);
-	}
+	public String atualizar(MailingModelo mailing) {
+		if (mailing.nome.equals("")) {
+			System.out.println("--Alteração de mailing reprovada, nome inválido--");
+			return "--Alteração de mailing reprovada, nome inválido--";
+		} else if (mailing.email.equals("")) {
+			System.out.println("--Alteração de mailing reprovada, email inválido--");
+			return "--Alteração de mailing reprovada, email inválido--";
+		} else if (mailing.telefone.equals("")) {
+			System.out.println("--Alteração de mailing reprovada, telefone inválido--");
+			return "--Alteração de mailing reprovada, telefone inválido--";
+		} else {
+		System.out.println("--Alteração de mailing aprovada--");		
+		repositorio.atualizar(mailing);
+		return "--Alteração de mailing aprovada--";
+	}}
 
 }

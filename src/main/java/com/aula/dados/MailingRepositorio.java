@@ -42,4 +42,16 @@ public class MailingRepositorio {
 		mailings.remove(mailing);
 		}
 
+	public void atualizar(MailingModelo mailing) {
+		System.out.println("Repositorio/Alterando mailing em repositório");
+		System.out.println("Atualizando a entrada com o id: " + mailing.id);
+		MailingModelo mailingNovoRegistro = new MailingModelo();
+		mailingNovoRegistro.setId(mailing.id);
+		mailingNovoRegistro.setNome(mailing.nome);
+		mailingNovoRegistro.setEmail(mailing.email);
+		mailingNovoRegistro.setTelefone(mailing.telefone);
+		mailings.add((MailingModelo) mailingNovoRegistro);
+		listagem();
+	}
+	
 }

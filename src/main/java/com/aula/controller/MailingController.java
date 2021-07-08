@@ -17,8 +17,6 @@ import com.aula.negocio.MailingServico;
 @Controller
 public class MailingController {
 	
-//	MailingServico servico = new MailingServico();
-	
 	@RequestMapping(value = "/apagar/{id}", method = RequestMethod.GET)
 	public String apagar(@PathVariable("id") Integer id, Model model) {	
 		MailingServico mailingServico = new MailingServico();
@@ -39,15 +37,93 @@ public class MailingController {
 		return "listagem-mailing";
 	}	
 	
-	@RequestMapping(value= "/mailing/{id}", method=RequestMethod.GET)
-	public String atualizar(@PathVariable("id") Integer id){		
-		//MailingServico servico = new MailingServico();
-		//MailingModelo mailing = servico.buscar(id);
-		//servico.atualizar(mailing);
-		return "atualiza-mailing";
+	@RequestMapping(value= "/submitUpdate", method=RequestMethod.POST)
+	public String atualizar(
+			@RequestParam(name = "ID") String userid,
+			@RequestParam(name = "nome") String nome,
+			@RequestParam(name = "email") String email,
+			@RequestParam(name = "telefone") String telefone,
+			Model model){
+		String resposta;
+		int id = Integer.parseInt(userid);
+		MailingServico mailingServico = new MailingServico();
+		resposta = mailingServico.deletar(id);
+		if (resposta == "Mailing não encontrado") {
+			model.addAttribute("MENSAGEM", resposta);
+			return listaTodosMailing();
+		}else {
+		MailingModelo mailing = new MailingModelo();		
+		mailing.setId(id);
+		mailing.setNome(nome);
+		mailing.setEmail(email);
+		mailing.setTelefone(telefone);
+		resposta = mailingServico.atualizar(mailing);		
+		switch (resposta) {
+		case "--Alteração de mailing reprovada, nome inválido--":			
+			model.addAttribute("MENSAGEM", resposta);
+			return "erro-nome";
+		case "--Alteração de mailing reprovada, email inválido--":
+			model.addAttribute("MENSAGEM", resposta);
+			return "erro-email";
+		case "--Alteração de mailing reprovada, telefone inválido--":
+			model.addAttribute("MENSAGEM", resposta);
+			return "erro-telefone";
+		case "--Alteração de mailing aprovada--":
+			model.addAttribute("MENSAGEM", resposta);
+			return "listagem-mailing";
+		}}
+		return null;
 	}
 	
-	@RequestMapping(value = "/mailing-formulario", method = RequestMethod.GET)
+	@RequestMapping(value="/atualizar/{id}", method=RequestMethod.GET)
+	public String preparaAtualizar(@PathVariable("id") Integer id, Model model) {
+		model.addAttribute("ID", id.toString());
+		return "prepara-atualizar";
+	}
+	
+	@RequestMapping(value = "/paginaLogin", method = RequestMethod.GET)
+	public String preparaLogin() {		
+		return "paginaLogin";
+	}
+	
+	@RequestMapping(value = "/admin", method = RequestMethod.GET)
+	public String preparaLoginAdmin() {		
+		return "adminLogin";
+	}
+	
+	@RequestMapping(value = "/administration", method = RequestMethod.POST)
+	public String LogaAdmin(
+			@RequestParam(name = "user") String user,
+			@RequestParam(name = "password") String password,
+			Model model) {
+		MailingServico mailingServico = new MailingServico();
+		boolean resposta = mailingServico.adminLog(user, password);
+		if (resposta == true)
+		{
+			return listaTodosMailing();
+		}
+		return "adminLoginError";
+	}
+	
+	@RequestMapping(value="/login", method=RequestMethod.POST)
+	public String loginMailing(
+			@RequestParam(name = "email") String email, 
+			Model model) {
+		MailingServico servico = new MailingServico();
+		boolean resposta = servico.buscarLogin(email);
+		String mensagem;
+		if (resposta == true) {
+			mensagem = "Cadastro encontrado!";
+			model.addAttribute("MENSAGEM", mensagem);
+		return "sucesso";
+		}
+		else {
+			return "erro-email";
+		}
+			
+	}
+	
+	@RequestMapping(value = "/homeMailing", method = RequestMethod.GET)
 	public String preparaCadastroMailing() {		
 		return "mailingHome";
 	}	
@@ -64,7 +140,6 @@ public class MailingController {
 		mailing.setNome(nome);
 		mailing.setEmail(email);
 		mailing.setTelefone(telefone);
-		//mailingServico.salvar(mailing);
 		
 		String resposta = mailingServico.salvar(mailing);		
 		

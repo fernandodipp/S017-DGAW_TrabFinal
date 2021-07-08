@@ -9,7 +9,14 @@
 <body>
 Erro no campo telefone<br>
 Preencha o campo telefone corretamente<br>
-Você será redirecionado de volta à página de cadastro<br>
+
 ${MENSAGEM}
+<br><button onclick="goBack()">Go Back</button>
+<br>
+<script>
+function goBack() {
+  window.history.back();
+}
+</script>
 </body>
 </html>
